@@ -7,7 +7,18 @@ const routes = [
   {
     path: "/",
     name: "index",
-    component: () => import("../views/index.vue")
+    component: () => import("../views/index.vue"),
+    children: [
+      {
+        path: "/a",
+        name: "a",
+        component: () => import("../views/section.vue")
+      }
+    ]
+  },
+  {
+    path: "*",
+    redirect: "/a"
   }
 ];
 

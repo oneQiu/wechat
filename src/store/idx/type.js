@@ -1,1 +1,1 @@
-export const SETNUMS = "setNums"
+export const SETNUMS = "setNums";
