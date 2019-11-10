@@ -16,20 +16,29 @@
           <div
             v-for="record in recordArr"
             :key="record.id"
-            :style="{textAlign: record.isMe?'right':'left'}"
-          >{{record.message}}</div>
+            :style="{textAlign: record.username === username?'right':'left'}"
+            class="msgWarp"
+          >
+            <van-tag type="primary" v-if="record.username !== username">{{record.username}}</van-tag>
+            <van-tag
+              type="success"
+              v-if="record.username === username"
+              style="float: right"
+            >{{record.username}}</van-tag>
+            <span style="padding: 0 5px">{{ record.msg}}</span>
+          </div>
         </div>
       </div>
       <div id="message">
         <div id="icons">图标</div>
         <div id="textarea">
           <van-field
-            v-model="message"
+            v-model="msg"
             rows="2"
-            autosize
             type="textarea"
             maxlength="250"
             placeholder="请输入留言"
+            @keydown="onTextareaVal"
             show-word-limit
           />
           <van-button type="primary" class="send" size="small" @click="sendMessage">发送</van-button>
@@ -40,29 +49,84 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data: () => ({
     searchVal: "",
-    message: "",
-    chatRecord: [
-      { isMe: true, message: "在吗？", id: 0 },
-      { isMe: false, message: "干嘛？", id: 1 },
-      { isMe: true, message: "俏丽吗", id: 2 }
-    ]
+    msg: "",
+    chatRecord: []
   }),
   methods: {
-    sendMessage() {}
+    sendMessage() {},
+    onTextareaVal(event) {
+      if (event.keyCode === 13) {
+        if (!this.msg.trim()) {
+          console.log(this.msg);
+          return;
+        }
+        this.$socket.emit("sendMsg", {
+          username: this.username,
+          msg: this.msg
+        });
+        this.msg = "";
+      }
+    }
   },
   computed: {
-    recordArr() {
-      return this.chatRecord.sort((r1, r2) => {
-        if (r1.id < r2.id) {
+    recordArr(data) {
+      let arr = data.chatRecord.sort((r1, r2) => {
+        if (r1.id > r2.id) {
           return 1;
         } else {
           return -1;
         }
       });
-    }
+      return arr;
+    },
+    ...mapState(["username"])
+  },
+  mounted() {
+    // 触发后台socket事件
+    console.log(this.username);
+    this.$socket.emit("login", {
+      username: this.username,
+      password: "132"
+    });
+    // 添加socket事件监听
+    this.sockets.subscribe("login", data => {
+      console.log(data.msg);
+      this.$notify({
+        type: data.code !== 200 ? "danger" : "primary",
+        message:
+          data.code === 200 ? data.msg : `${data.msg}，3秒后跳转到登录页面`,
+        duration: 3000,
+        onClose: () => {
+          if (data.code !== 200) {
+            this.$router.push("login");
+          }
+        }
+      });
+    });
+    // 监听sendMsg
+    this.sockets.subscribe("sendMsg", data => {
+      if (data.code !== 200) {
+        this.$notify({
+          type: "danger",
+          message:
+            data.code === 200 ? data.msg : `${data.msg}，3秒后跳转到登录页面`,
+          duration: 3000,
+          onClose: () => {
+            if (data.code !== 200) {
+              this.$router.push("login");
+            }
+          }
+        });
+        return;
+      }
+      const msg = data;
+      delete msg.obj;
+      this.chatRecord.push(msg);
+    });
   }
 };
 </script>
@@ -120,6 +184,7 @@ export default {
       }
       #textarea {
         flex: 1;
+        background: #fff;
       }
     }
     #content {
@@ -132,8 +197,8 @@ export default {
         padding-left: 20px;
       }
       #inner {
-        flex: 1;
-        flex-grow: 1;
+        overflow-y: scroll;
+        height: 400px;
         padding: 10px 20px;
         border: 1px solid #edeae8;
         border-left: none;
@@ -143,8 +208,11 @@ export default {
   }
   .send {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 8px;
+    right: 60px;
+  }
+  .msgWarp {
+    margin: 10px 0;
   }
 }
 </style>

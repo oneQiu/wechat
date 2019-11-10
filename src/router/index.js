@@ -10,15 +10,20 @@ const routes = [
     component: () => import("../views/index.vue"),
     children: [
       {
-        path: "/a",
-        name: "a",
+        path: "/",
+        name: "login",
+        component: () => import("../views/login.vue")
+      },
+      {
+        path: "/talk",
+        name: "talk",
         component: () => import("../views/section.vue")
       }
     ]
   },
   {
     path: "*",
-    redirect: "/a"
+    redirect: "/"
   }
 ];
 

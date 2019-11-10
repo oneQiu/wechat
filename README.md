@@ -1,24 +1,11 @@
-# wechat
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# wechat聊天室
+## 安装依赖
+- `npm install`
+- `npm i nodemon -g`
+## 启动项目
+-  `yarn serve` 运行Vue页面
+-  `nodemon server.js` 启动服务
+## 路由
+- 默认登录页面
+- login 登录页面
+- talk 聊天室页面
