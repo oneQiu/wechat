@@ -36,10 +36,7 @@ export default {
     tips: "这是一个tips"
   }),
   methods: {
-    ...mapMutations(["SETNUMS"]),
-    setNums() {
-      console.log(this);
-    }
+    ...mapMutations(["SETNUMS"])
   }
 };
 </script>

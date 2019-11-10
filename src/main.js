@@ -32,7 +32,8 @@ Vue.use(Button)
   .use(
     new VueSocketIO({
       debug: true,
-      connection: "http://localhost:8888",
+      connection:
+        window.location.protocol + "//" + window.location.hostname + ":8888",
       vues: {}
     })
   );
