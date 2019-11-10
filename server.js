@@ -1,14 +1,3 @@
-// let app = require('express')();
-// let http = require('http').createServer(app);
-// let io = require('socket.io');
-
-// app.get('/', (req, res) => {
-//     res.send('Hello World');
-// })
-
-// http.listen(3333, () => {
-//     console.log('http://localhost:3333');
-// })
 var app = require("express")();
 var server = require("http").Server(app);
 var io = require("socket.io")(server);

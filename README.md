@@ -1,9 +1,9 @@
 # wechat聊天室
 ## 安装依赖
-- `npm install`
-- `npm i nodemon -g`
+- `yarn install`
+- `yarn i nodemon -g`
 ## 启动项目
--  `yarn serve` 运行Vue页面
+-  `yarn server` 运行Vue页面
 -  `nodemon server.js` 启动服务
 ## 路由
 - 默认登录页面
