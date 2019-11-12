@@ -57,18 +57,20 @@ export default {
     chatRecord: []
   }),
   methods: {
-    sendMessage() {},
+    sendMessage() {
+      if (!this.msg.trim()) {
+        console.log(this.msg);
+        return;
+      }
+      this.$socket.emit("sendMsg", {
+        username: this.username,
+        msg: this.msg
+      });
+      this.msg = "";
+    },
     onTextareaVal(event) {
       if (event.keyCode === 13) {
-        if (!this.msg.trim()) {
-          console.log(this.msg);
-          return;
-        }
-        this.$socket.emit("sendMsg", {
-          username: this.username,
-          msg: this.msg
-        });
-        this.msg = "";
+        this.sendMessage();
       }
     }
   },
@@ -86,20 +88,13 @@ export default {
     ...mapState(["username"])
   },
   mounted() {
-    // 触发后台socket事件
-    console.log(this.username);
-    this.$socket.emit("login", {
-      username: this.username,
-      password: "132"
-    });
     // 添加socket事件监听
     this.sockets.subscribe("login", data => {
-      console.log(data.msg);
       this.$notify({
         type: data.code !== 200 ? "danger" : "primary",
         message:
           data.code === 200 ? data.msg : `${data.msg}，3秒后跳转到登录页面`,
-        duration: 3000,
+        duration: 1500,
         onClose: () => {
           if (data.code !== 200) {
             this.$router.push("login");

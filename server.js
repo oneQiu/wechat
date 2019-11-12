@@ -88,14 +88,15 @@ io.on("connection", socket => {
   });
   // 用户退出
   socket.on("disconnect", () => {
-    let userIndex = users.findIndex(item => item.socketId === socket.id) > -1&&
-        users.findIndex(item => item.socketId === socket.id);
-    users[userIndex].isLogin = false;
-    socket.broadcast.emit("login", {
-      msg: `${users[userIndex].username}已经离开聊天室`,
-      type: "systemMsg",
-      code: 200
-    });
+    if (users.findIndex(item => item.socketId === socket.id) > -1) {
+      let userIndex = users.findIndex(item => item.socketId === socket.id);
+      users[userIndex].isLogin = false;
+      socket.broadcast.emit("login", {
+        msg: `${users[userIndex].username}已经离开聊天室`,
+        type: "systemMsg",
+        code: 200
+      });
+    }
   });
 });
 

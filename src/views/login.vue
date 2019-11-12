@@ -47,18 +47,32 @@ export default {
       if (username && username.trim() && password && password.trim()) {
         setUser({ username, password });
         this.isLogin = true;
-        setTimeout(() => {
-          this.isLogin = false;
-          this.$toast.success({
-            message: "登陆成功",
-            duration: 1500,
-            onClose: () => {
-              this.$router.push("talk");
-            }
-          });
-        }, 1500);
+        this.$socket.emit("login", {
+          username,
+          password
+        });
       }
     }
+  },
+  mounted() {
+    // 监听登录
+    this.sockets.subscribe("login", res => {
+      if (res.code === 200) {
+        setTimeout(() => {
+          this.isLogin = false;
+          this.$router.push("talk").catch(e => {
+            console.log(e);
+          });
+        }, 2500);
+      } else {
+        this.isLogin = false;
+        this.$notify({
+          type: "danger",
+          message: res.msg,
+          duration: 3000
+        });
+      }
+    });
   }
 };
 </script>
