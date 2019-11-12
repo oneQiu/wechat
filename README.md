@@ -1,4 +1,5 @@
 # wechat聊天室
+> websoket 通信
 ## 安装依赖
 - `yarn install`
 - `yarn i nodemon -g`
