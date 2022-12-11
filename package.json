@@ -11,7 +11,7 @@
     "axios": "^0.19.0",
     "babel-plugin-import": "^1.12.2",
     "core-js": "^3.3.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "socket.io": "^2.3.0",
     "vant": "^2.2.11",
     "vue": "^2.6.10",
